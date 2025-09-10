@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente de Estratégia de Blackjack</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Assistente de Blackjack</h1>
+        <p>Selecione as cartas para obter a jogada ideal baseada na Estratégia Básica.</p>
+        
+        <div class="cards-selector">
+            <div class="card-input">
+                <label for="playerCard1">Sua 1ª Carta:</label>
+                <select id="playerCard1">
+                    <option value="A">A</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10" selected>10</option>
+                    <option value="J">J</option>
+                    <option value="Q">Q</option>
+                    <option value="K">K</option>
+                </select>
+            </div>
+            <div class="card-input">
+                <label for="playerCard2">Sua 2ª Carta:</label>
+                <select id="playerCard2">
+                    <option value="A">A</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6" selected>6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="J">J</option>
+                    <option value="Q">Q</option>
+                    <option value="K">K</option>
+                </select>
+            </div>
+            
+            <div class="card-input dealer-card">
+                <label for="dealerCard">Carta do Croupier:</label>
+                <select id="dealerCard">
+                    <option value="A">A</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7" selected>7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="J">J</option>
+                    <option value="Q">Q</option>
+                    <option value="K">K</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="calculateBtn">Verificar Jogada</button>
+
+        <div id="result" class="hidden">
+            <h2>Ação Recomendada:</h2>
+            <p id="actionText"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
