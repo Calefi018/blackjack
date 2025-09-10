@@ -10,71 +10,48 @@
 
     <div class="container">
         <h1>Assistente de Blackjack</h1>
-        <p>Selecione as cartas para obter a jogada ideal baseada na Estratégia Básica.</p>
         
-        <div class="cards-selector">
-            <div class="card-input">
-                <label for="playerCard1">Sua 1ª Carta:</label>
-                <select id="playerCard1">
-                    <option value="A">A</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10" selected>10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
+        <div id="initialSetup">
+            <p>Selecione as cartas iniciais para começar a rodada.</p>
+            <div class="cards-selector">
+                <div class="card-input">
+                    <label for="playerCard1">Sua 1ª Carta:</label>
+                    <select id="playerCard1">
+                        </select>
+                </div>
+                <div class="card-input">
+                    <label for="playerCard2">Sua 2ª Carta:</label>
+                    <select id="playerCard2">
+                        </select>
+                </div>
+                <div class="card-input dealer-card">
+                    <label for="dealerCard">Carta do Croupier:</label>
+                    <select id="dealerCard">
+                        </select>
+                </div>
             </div>
-            <div class="card-input">
-                <label for="playerCard2">Sua 2ª Carta:</label>
-                <select id="playerCard2">
-                    <option value="A">A</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6" selected>6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
-            
-            <div class="card-input dealer-card">
-                <label for="dealerCard">Carta do Croupier:</label>
-                <select id="dealerCard">
-                    <option value="A">A</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7" selected>7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="J">J</option>
-                    <option value="Q">Q</option>
-                    <option value="K">K</option>
-                </select>
-            </div>
+            <button id="startBtn">Iniciar Rodada</button>
         </div>
 
-        <button id="calculateBtn">Verificar Jogada</button>
+        <div id="gameplay" class="hidden">
+            <div class="hand-display">
+                <h3>Sua Mão Atual: <span id="currentHandText"></span> (<span id="currentHandValue"></span>)</h3>
+                <h3>Croupier Mostra: <span id="dealerCardText"></span></h3>
+            </div>
+            
+            <div id="result">
+                <h2>Ação Recomendada:</h2>
+                <p id="actionText"></p>
+            </div>
 
-        <div id="result" class="hidden">
-            <h2>Ação Recomendada:</h2>
-            <p id="actionText"></p>
+            <div id="addCardSection" class="card-input">
+                <label for="newCardSelect">Você pediu e recebeu:</label>
+                <select id="newCardSelect">
+                    </select>
+                <button id="addCardBtn">Adicionar Carta</button>
+            </div>
+
+            <button id="resetBtn">Reiniciar Rodada</button>
         </div>
     </div>
 
