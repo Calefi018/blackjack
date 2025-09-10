@@ -3,58 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente de Estratégia de Blackjack</title>
+    <title>Assistente de Blackjack Tático</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="container">
-        <h1>Assistente de Blackjack</h1>
+        <h1>Assistente Tático de Blackjack</h1>
         
         <div id="initialSetup">
-            <p>Selecione as cartas iniciais para começar a rodada.</p>
+            <p>Selecione as cartas iniciais para começar.</p>
             <div class="cards-selector">
                 <div class="card-input">
                     <label for="playerCard1">Sua 1ª Carta:</label>
-                    <select id="playerCard1">
-                        </select>
+                    <select id="playerCard1"></select>
                 </div>
                 <div class="card-input">
                     <label for="playerCard2">Sua 2ª Carta:</label>
-                    <select id="playerCard2">
-                        </select>
+                    <select id="playerCard2"></select>
                 </div>
                 <div class="card-input dealer-card">
                     <label for="dealerCard">Carta do Croupier:</label>
-                    <select id="dealerCard">
-                        </select>
+                    <select id="dealerCard"></select>
                 </div>
             </div>
-            <button id="startBtn">Iniciar Rodada</button>
+            <button id="startBtn">Analisar Mão</button>
         </div>
 
         <div id="gameplay" class="hidden">
-            <div class="hand-display">
-                <h3>Sua Mão Atual: <span id="currentHandText"></span> (<span id="currentHandValue"></span>)</h3>
-                <h3>Croupier Mostra: <span id="dealerCardText"></span></h3>
-            </div>
+            <div id="handsContainer"></div>
             
             <div id="result">
-                <h2>Ação Recomendada:</h2>
-                <p id="actionText"></p>
+                <h2>Ação Ideal: <span id="actionText"></span></h2>
             </div>
 
-            <div id="addCardSection" class="card-input">
-                <label for="newCardSelect">Você pediu e recebeu:</label>
-                <select id="newCardSelect">
-                    </select>
-                <button id="addCardBtn">Adicionar Carta</button>
-            </div>
+            <div id="actionButtons"></div>
 
-            <button id="resetBtn">Reiniciar Rodada</button>
+            <button id="resetBtn">Nova Rodada</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
