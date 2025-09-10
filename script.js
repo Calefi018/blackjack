@@ -6,17 +6,16 @@ let dealerCard = '';
 // --- CONSTANTES ---
 const ALL_CARDS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
-// --- FUNÇÕES DE LÓGICA DE JOGO ---
-
-// CORREÇÃO: Função mais simples e robusta para obter o valor da carta.
+// --- FUNÇÕES DE LÓGICA DE JOGO (Versão estável) ---
 function getCardValue(card) {
+    if (!card) return 0;
     if (['K', 'Q', 'J', '10'].includes(card)) return 10;
     if (card === 'A') return 11;
     return parseInt(card, 10);
 }
 
-// CORREÇÃO: Garantia de que sempre retorna um número.
 function getHandValue(hand) {
+    if (!hand || hand.length === 0) return 0;
     let total = 0;
     let numAces = 0;
     hand.forEach(card => {
@@ -30,15 +29,9 @@ function getHandValue(hand) {
     return total;
 }
 
-// REFINAMENTO: Função auxiliar para checar se uma mão é "soft" (Ás valendo 11).
 function isSoftHand(hand) {
-    let total = 0;
-    let hasAce = false;
-    hand.forEach(card => {
-        total += getCardValue(card);
-        if (card === 'A') hasAce = true;
-    });
-    return hasAce && total <= 21;
+    if (!hand.includes('A')) return false;
+    return getHandValue(hand.map(c => c === 'A' ? '1' : c)) + 10 === getHandValue(hand);
 }
 
 function getStrategy(playerHand, dealerCard) {
@@ -47,11 +40,7 @@ function getStrategy(playerHand, dealerCard) {
     const isInitialHand = playerHand.length === 2;
     const isSoft = isSoftHand(playerHand);
 
-    // 1. Rendição (Surrender)
-    if (isInitialHand && playerValue === 16 && !isSoft && [9, 10, 11].includes(dealerValue)) return "SURRENDER";
-    if (isInitialHand && playerValue === 15 && dealerValue === 10) return "SURRENDER";
-
-    // 2. Divisão (Split)
+    // Prioridade 1: Split
     if (isInitialHand && playerHand[0] === playerHand[1]) {
         const pairValue = getCardValue(playerHand[0]);
         if (pairValue === 11 || pairValue === 8) return "SPLIT";
@@ -62,50 +51,52 @@ function getStrategy(playerHand, dealerCard) {
         if ([2, 3].includes(pairValue) && dealerValue <= 7) return "SPLIT";
     }
 
-    // 3. Dobrar (Double Down)
-    if (isInitialHand) {
-        if (isSoft) { // Soft Doubles
-            if (playerValue >= 13 && playerValue <= 18 && [5, 6].includes(dealerValue)) return "DOUBLE";
-            if (playerValue >= 17 && playerValue <= 18 && [3, 4].includes(dealerValue)) return "DOUBLE";
-        } else { // Hard Doubles
-            if (playerValue === 11) return "DOUBLE";
-            if (playerValue === 10 && dealerValue <= 9) return "DOUBLE";
-            if (playerValue === 9 && dealerValue >= 3 && dealerValue <= 6) return "DOUBLE";
+    // Prioridade 2: Mãos Soft (Dobrar, Parar ou Pedir)
+    if (isSoft) {
+        if (isInitialHand) { // Soft Doubles
+            if (playerValue >= 19 && dealerValue === 6) return "DOUBLE";
+            if (playerValue === 18 && dealerValue >= 2 && dealerValue <= 6) return "DOUBLE";
+            if (playerValue === 17 && dealerValue >= 3 && dealerValue <= 6) return "DOUBLE";
+            if (playerValue <= 16 && dealerValue >= 4 && dealerValue <= 6) return "DOUBLE";
         }
-    }
-
-    // 4. Pedir (Hit) ou Parar (Stand)
-    if (isSoft) { // Soft Hands
         if (playerValue >= 19) return "STAND";
         if (playerValue === 18 && dealerValue <= 8) return "STAND";
         return "HIT";
-    } else { // Hard Hands
-        if (playerValue >= 17) return "STAND";
-        if (playerValue >= 13 && dealerValue <= 6) return "STAND";
-        if (playerValue === 12 && [4, 5, 6].includes(dealerValue)) return "STAND";
-        return "HIT";
     }
+
+    // Prioridade 3: Mãos Hard (Dobrar, Parar ou Pedir)
+    if (isInitialHand) { // Hard Doubles
+        if (playerValue === 11) return "DOUBLE";
+        if (playerValue === 10 && dealerValue <= 9) return "DOUBLE";
+        if (playerValue === 9 && dealerValue >= 3 && dealerValue <= 6) return "DOUBLE";
+    }
+    if (playerValue >= 17) return "STAND";
+    if (playerValue >= 13 && dealerValue <= 6) return "STAND";
+    if (playerValue === 12 && [4, 5, 6].includes(dealerValue)) return "STAND";
+    
+    return "HIT";
 }
 
 
-// --- FUNÇÕES DE CONTROLE DA INTERFACE ---
+// --- FUNÇÕES DE CONTROLE DA INTERFACE (Motor do Jogo Refeito) ---
 
 function renderHands() {
     const handsContainer = document.getElementById('handsContainer');
     handsContainer.innerHTML = '';
+    if (hands.length === 0) return;
+
     hands.forEach((hand, index) => {
         const handBox = document.createElement('div');
         handBox.className = 'hand-box';
-        if (index === activeHandIndex && hands.length > 0) {
+        if (index === activeHandIndex) {
             handBox.classList.add('active');
         }
-        const handValue = getHandValue(hand); // CORREÇÃO: Chamando a função correta
+        const handValue = getHandValue(hand);
         let status = '';
         if (handValue > 21) status = ' (Estourou!)';
         if (handValue === 21) status = ' (21!)';
-        
         const dealerInfo = `<p class="dealer-info">Croupier: ${dealerCard}</p>`;
-
+        
         handBox.innerHTML = `
             <h3>Mão ${index + 1} (${handValue}) ${status}</h3>
             <p>${hand.join(' - ')}</p>
@@ -115,25 +106,29 @@ function renderHands() {
     });
 }
 
-// CORREÇÃO: Lógica de fluxo de jogo totalmente refeita
+// REFINAMENTO: O motor principal do jogo, agora com fluxo lógico correto.
 function updateGame() {
+    // Se o índice ativo já passou do número de mãos, a rodada acabou.
     if (activeHandIndex >= hands.length) {
-        // Todas as mãos foram jogadas
         document.getElementById('actionText').textContent = "Rodada Finalizada!";
         document.getElementById('actionButtons').innerHTML = ''; // Limpa botões
+        renderHands(); // Renderiza uma última vez para remover o destaque
         return;
     }
 
-    renderHands();
     const currentHand = hands[activeHandIndex];
     const handValue = getHandValue(currentHand);
-
+    
+    // Atualiza a tela ANTES de tomar decisões
+    renderHands();
+    
+    // Se a mão atual está "completa" (21 ou estourou), passa para a próxima.
     if (handValue >= 21) {
-        // Mão estourou ou fez 21, passa para a próxima automaticamente
-        setTimeout(() => nextHand(), 1000); // Espera 1s para o jogador ver o resultado
+        setTimeout(nextHand, 1200); // Espera um pouco para o jogador ver o resultado
         return;
     }
     
+    // Se a mão está em jogo, calcula a estratégia e mostra os botões.
     const strategy = getStrategy(currentHand, dealerCard);
     document.getElementById('actionText').textContent = strategy;
     renderActionButtons(strategy, currentHand);
@@ -144,39 +139,35 @@ function renderActionButtons(strategy, currentHand) {
     buttonsDiv.innerHTML = '';
     const isInitialHand = currentHand.length === 2;
 
-    const actions = new Set();
-    // Adiciona ações com base na estratégia
-    if (strategy === 'HIT' || strategy === 'DOUBLE') actions.add('HIT');
-    if (strategy === 'STAND') actions.add('STAND');
-    if (strategy === 'DOUBLE') actions.add('DOUBLE');
-    if (strategy === 'SPLIT') actions.add('SPLIT');
-    if (strategy === 'SURRENDER') actions.add('SURRENDER');
-    
-    // Sempre adiciona Stand como uma opção manual, a menos que a estratégia seja Hit
-    if (strategy !== 'HIT') actions.add('STAND');
+    // Ações possíveis baseadas na estratégia e regras
+    const possibleActions = new Set();
+    if (strategy === "HIT" || strategy === "DOUBLE") possibleActions.add("HIT");
+    if (strategy === "STAND" || strategy === "SPLIT") possibleActions.add("STAND");
+    if (strategy === "DOUBLE" && isInitialHand) possibleActions.add("DOUBLE");
+    if (strategy === "SPLIT" && isInitialHand) possibleActions.add("SPLIT");
 
-
-    if (actions.has('HIT')) {
+    // Renderiza os botões
+    if (possibleActions.has('HIT')) {
         const hitBtn = document.createElement('button');
         hitBtn.textContent = 'Pedir (Hit)';
         hitBtn.onclick = handleHit;
         buttonsDiv.appendChild(hitBtn);
     }
-    if (actions.has('STAND')) {
+    if (possibleActions.has('STAND')) {
         const standBtn = document.createElement('button');
         standBtn.textContent = 'Parar (Stand)';
         standBtn.className = 'stand-btn';
         standBtn.onclick = nextHand;
         buttonsDiv.appendChild(standBtn);
     }
-    if (actions.has('DOUBLE') && isInitialHand) {
+    if (possibleActions.has('DOUBLE')) {
         const doubleBtn = document.createElement('button');
         doubleBtn.textContent = 'Dobrar (Double)';
         doubleBtn.className = 'double-btn';
         doubleBtn.onclick = () => handleHit(true);
         buttonsDiv.appendChild(doubleBtn);
     }
-    if (actions.has('SPLIT') && isInitialHand && currentHand[0] === currentHand[1]) {
+    if (possibleActions.has('SPLIT')) {
         const splitBtn = document.createElement('button');
         splitBtn.textContent = 'Dividir (Split)';
         splitBtn.className = 'split-btn';
@@ -185,16 +176,16 @@ function renderActionButtons(strategy, currentHand) {
     }
 }
 
-
+// REFINAMENTO: Funções de ação simplificadas. Elas apenas modificam o estado e chamam updateGame().
 function handleHit(isDouble = false) {
     const newCard = prompt("Qual carta você recebeu?");
     if (newCard && ALL_CARDS.includes(newCard.toUpperCase())) {
         hands[activeHandIndex].push(newCard.toUpperCase());
         if (isDouble) {
-            renderHands();
-            setTimeout(() => nextHand(), 1000);
+            renderHands(); // Mostra a carta final
+            setTimeout(nextHand, 1200); // Dobrar encerra a mão
         } else {
-            updateGame();
+            updateGame(); // Continua jogando a mesma mão
         }
     } else if (newCard) {
         alert("Carta inválida!");
@@ -218,6 +209,7 @@ function handleSplit() {
     updateGame();
 }
 
+// REFINAMENTO: Função dedicada para avançar a mão
 function nextHand() {
     activeHandIndex++;
     updateGame();
@@ -239,9 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
-        document.getElementById('playerCard1').value = '3';
-        document.getElementById('playerCard2').value = '3';
-        document.getElementById('dealerCard').value = '8';
+        document.getElementById('playerCard1').value = '2';
+        document.getElementById('playerCard2').value = '2';
+        document.getElementById('dealerCard').value = '3';
     }
 
     populateSelects();
