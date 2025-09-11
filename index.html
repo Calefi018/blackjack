@@ -3,45 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Probabilidade de Blackjack</title>
+    <title>Assistente de Blackjack Expert</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Calculadora de Probabilidade de Blackjack</h1>
-        
-        <div id="initialSetup">
-            <p>Insira a sua mão e a carta do croupier para calcular o Valor Esperado (EV) e a melhor jogada.</p>
-            <div class="cards-selector">
-                <div class="card-input">
-                    <label for="playerCards">Suas Cartas (separadas por espaço):</label>
-                    <input type="text" id="playerCards" value="10 6">
-                </div>
-                <div class="card-input dealer-card">
-                    <label for="dealerCard">Carta do Croupier:</label>
-                    <input type="text" id="dealerCard" value="7">
-                </div>
+        <h1>Assistente de Blackjack Expert</h1>
+
+        <div class="counter-module">
+            <h2>Contagem de Cartas (Hi-Lo)</h2>
+            <div class="count-buttons">
+                <button id="count-low-btn">Carta Baixa (2-6) <strong>+1</strong></button>
+                <button id="count-mid-btn">Carta Neutra (7-9) <strong>0</strong></button>
+                <button id="count-high-btn">Carta Alta (10-A) <strong>-1</strong></button>
             </div>
-             <div class="game-setup">
-                <label for="deckCount">Nº de Baralhos no Jogo:</label>
-                <select id="deckCount">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                    <option value="6" selected>6</option>
-                    <option value="8">8</option>
-                </select>
+            <div class="count-display">
+                <p>Contagem Contínua: <span id="running-count">0</span></p>
+                <p>Cartas Vistas: <span id="cards-played">0</span></p>
+                <p>Contagem Verdadeira: <span id="true-count">0.00</span></p>
             </div>
-            <button id="calculateBtn">Calcular Probabilidades</button>
+            <div id="bet-advice">Aposta Mínima</div>
         </div>
 
-        <div id="resultsContainer" class="hidden">
-            <h2>Análise da Jogada</h2>
-            <div id="results-breakdown">
+        <div class="game-module">
+            <h2>Análise de Mão</h2>
+            
+            <div id="initialSetup">
+                <div class="game-setup">
+                    <label for="deckCount">Nº de Baralhos:</label>
+                    <select id="deckCount">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="6" selected>6</option>
+                        <option value="8">8</option>
+                    </select>
                 </div>
-            <h3 id="best-action"></h3>
+                <div class="cards-selector">
+                    <div class="card-input">
+                        <label for="playerCards">Suas Cartas (ex: A 8):</label>
+                        <input type="text" id="playerCards" value="10 6">
+                    </div>
+                    <div class="card-input">
+                        <label for="dealerCard">Croupier (ex: 7):</label>
+                        <input type="text" id="dealerCard" value="7">
+                    </div>
+                </div>
+                <button id="startBtn">Analisar Mão</button>
+            </div>
+
+            <div id="gameplay" class="hidden">
+                <div id="handsContainer"></div>
+                <div id="resultsContainer">
+                    <div id="results-breakdown"></div>
+                    <h3 id="best-action"></h3>
+                    <div id="deviation-alert" class="hidden"></div>
+                </div>
+                <div id="actionButtons"></div>
+                <button id="resetBtn">Nova Rodada</button>
+            </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
