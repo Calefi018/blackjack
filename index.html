@@ -3,42 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente de Blackjack Tático</title>
+    <title>Calculadora de Probabilidade de Blackjack</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Assistente Tático de Blackjack</h1>
+        <h1>Calculadora de Probabilidade de Blackjack</h1>
         
         <div id="initialSetup">
-            <p>Selecione as cartas iniciais para começar.</p>
+            <p>Insira a sua mão e a carta do croupier para calcular o Valor Esperado (EV) e a melhor jogada.</p>
             <div class="cards-selector">
                 <div class="card-input">
-                    <label for="playerCard1">Sua 1ª Carta:</label>
-                    <select id="playerCard1"></select>
-                </div>
-                <div class="card-input">
-                    <label for="playerCard2">Sua 2ª Carta:</label>
-                    <select id="playerCard2"></select>
+                    <label for="playerCards">Suas Cartas (separadas por espaço):</label>
+                    <input type="text" id="playerCards" value="10 6">
                 </div>
                 <div class="card-input dealer-card">
                     <label for="dealerCard">Carta do Croupier:</label>
-                    <select id="dealerCard"></select>
+                    <input type="text" id="dealerCard" value="7">
                 </div>
             </div>
-            <button id="startBtn">Analisar Mão</button>
+             <div class="game-setup">
+                <label for="deckCount">Nº de Baralhos no Jogo:</label>
+                <select id="deckCount">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="6" selected>6</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+            <button id="calculateBtn">Calcular Probabilidades</button>
         </div>
 
-        <div id="gameplay" class="hidden">
-            <div id="handsContainer"></div>
-            
-            <div id="result">
-                <h2>Ação Ideal: <span id="actionText"></span></h2>
-            </div>
-
-            <div id="actionButtons"></div>
-
-            <button id="resetBtn">Nova Rodada</button>
+        <div id="resultsContainer" class="hidden">
+            <h2>Análise da Jogada</h2>
+            <div id="results-breakdown">
+                </div>
+            <h3 id="best-action"></h3>
         </div>
     </div>
     <script src="script.js"></script>
