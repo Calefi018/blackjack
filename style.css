@@ -4,71 +4,56 @@ body {
     color: #fff;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Alinhado ao topo */
     min-height: 100vh;
     margin: 0;
-    padding: 20px 0;
+    padding: 20px;
 }
 .container {
     background-color: #0f4f2c;
-    padding: 20px 30px;
+    padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     text-align: center;
-    max-width: 700px;
-    width: 90%;
+    max-width: 900px;
+    width: 100%;
 }
-h1, h2, h3 {
-    color: #ffcc00;
-}
-input[type="text"], select {
-    padding: 10px;
-    font-size: 1.2rem;
-    border-radius: 5px;
-    border: none;
-    background-color: #f0f0f0;
-    color: #333;
-    text-align: center;
-    text-transform: uppercase;
-}
-button {
-    background-color: #ffcc00;
-    color: #1a3a1a;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 20px;
-}
-button:hover { opacity: 0.9; }
+h1, h2, h3 { color: #ffcc00; }
+button { cursor: pointer; border: none; border-radius: 8px; font-weight: bold; padding: 10px 15px; transition: all 0.2s; }
+button:hover { opacity: 0.9; transform: translateY(-1px); }
 .hidden { display: none; }
 
-/* --- Estilos para os Resultados --- */
-#resultsContainer { margin-top: 20px; }
-#results-breakdown {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-.result-box {
-    background-color: rgba(0,0,0,0.2);
-    border: 2px solid #555;
-    border-radius: 10px;
-    padding: 15px;
-    min-width: 200px;
-}
-.result-box.best {
-    border-color: #ffcc00;
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
-}
-.result-box h4 { margin: 0 0 10px 0; font-size: 1.2rem; }
-.result-box p { margin: 5px 0; }
-.win { color: #4CAF50; }
-.loss { color: #f44336; }
-.push { color: #f0f0f0; }
+/* Módulo de Contagem */
+.counter-module { background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+.count-buttons { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
+.count-buttons button { flex-grow: 1; }
+#count-low-btn { background-color: #4CAF50; color: white; }
+#count-mid-btn { background-color: #607D8B; color: white; }
+#count-high-btn { background-color: #f44336; color: white; }
+.count-display { display: flex; justify-content: space-around; font-size: 0.9rem; }
+#bet-advice { margin-top: 10px; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; }
+
+/* Módulo de Jogo */
+.game-module { background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; }
+#initialSetup, .cards-selector, .game-setup { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+.cards-selector { flex-direction: row; justify-content: center; }
+input[type="text"], select { padding: 10px; font-size: 1rem; border-radius: 5px; border: none; text-align: center; text-transform: uppercase; }
+#startBtn { background-color: #ffcc00; color: #1a3a1a; font-size: 1.1rem; padding: 12px 30px; }
+#resetBtn { background-color: #f44336; color: white; }
+
+/* Jogo Ativo */
+#handsContainer { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0; }
+.hand-box { background-color: rgba(0,0,0,0.3); border: 2px solid #555; border-radius: 10px; padding: 15px; min-width: 180px; }
+.hand-box.active { border-color: #ffcc00; box-shadow: 0 0 15px rgba(255, 204, 0, 0.5); }
+#results-breakdown { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+.result-box { background-color: rgba(0,0,0,0.3); border: 1px solid #444; border-radius: 8px; padding: 10px; min-width: 150px; }
+.result-box.best { border-color: #ffcc00; }
+.result-box h4 { margin: 0 0 8px 0; }
+.result-box p { margin: 3px 0; font-size: 0.85rem; }
 .ev { font-weight: bold; }
+#deviation-alert { background-color: #00bcd4; color: black; padding: 10px; border-radius: 8px; margin-top: 10px; font-weight: bold; }
+
+/* Action Buttons */
+#actionButtons button { background-color: #03A9F4; color: white; }
+#actionButtons .stand-btn { background-color: #ff9800; }
+#actionButtons .split-btn { background-color: #9C27B0; }
